@@ -1,0 +1,10 @@
+enabled: true
+disable-rak: true
+synapses:
+ - enabled: true
+   ip: 127.0.0.1
+   port: 10305
+   description: "Test"
+   is-main: true
+   password: 1234567890123456
+loadingScreen: true
