@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace synapsepm;
 
 use pocketmine\plugin\PluginBase;
@@ -29,6 +30,9 @@ class SynapsePM extends PluginBase {
 				$this->addSynapse(new Synapse($this, $synapseConfig));
 			}
 		}
+
+
+
 
 		$this->useLoadingScreen = (bool)$this->getConfig()->get('loadingScreen', true);
 	}
