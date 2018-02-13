@@ -4,7 +4,7 @@ synapses:
  - enabled: true
    ip: 127.0.0.1
    port: 10305
-   description: "Test"
+   description: "ServerDescription"
    is-main: true
-   password: 1234567890123456
+   password: YourNemisysPassword
 loadingScreen: true
