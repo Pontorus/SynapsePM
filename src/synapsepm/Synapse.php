@@ -174,14 +174,17 @@ class Synapse {
 		return $this->serverIp . ':' . $this->port;
 	}
 
-	public function getPacket($buffer)
-    {
-        $pid = ord($buffer);
-        if (($data = PacketPool::getPacketById($pid)) === null) {
-            return null;
-        }
-        $data->setBuffer($buffer, 1);
-    }
+	public function getPacket($buffer) {
+		$pid = ord($buffer{0});
+		if ($pid === 0xFF) {
+			$pid = 0xFE;
+		}
+		if (($data = PacketPool::getPacketById($pid)) === null) {
+			return null;
+		}
+		$data->setBuffer($buffer, 1);
+		return $data;
+	}
 
 	/**
 	 * @internal
@@ -238,8 +241,8 @@ class Synapse {
 			/** @var Player $player */
 			$player = new $class($this->synLibInterface, $ev->getClientId(), $ev->getAddress(), $ev->getPort());
 			$player->setUniqueId($pk->uuid);
-            $this->players[$pk->uuid->toBinary()] = $player;
 			$this->server->addPlayer(spl_object_hash($player), $player);
+			$this->players[$pk->uuid->toBinary()] = $player;
 			$player->handleLoginPacket($pk);
 			break;
 		case Info::REDIRECT_PACKET:

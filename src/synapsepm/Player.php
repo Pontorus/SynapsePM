@@ -6,7 +6,6 @@ use pocketmine\event\server\DataPacketSendEvent;
 use pocketmine\level\Level;
 use pocketmine\network\mcpe\protocol\DataPacket;
 use pocketmine\network\mcpe\protocol\FullChunkDataPacket;
-use pocketmine\network\mcpe\protocol\LoginPacket;
 use pocketmine\network\mcpe\protocol\PlayerListPacket;
 use pocketmine\network\mcpe\protocol\PlayStatusPacket;
 use pocketmine\network\mcpe\protocol\ResourcePacksInfoPacket;
@@ -33,23 +32,19 @@ class Player extends PMPlayer {
 		$this->synapse = $interface->getSynapse();
 	}
 
-	public function handleLoginPacket(PlayerLoginPacket $pk)
-    {
-        $this->isFirstTimeLogin = $pk->isFirstTime;
-        $this->server->getPluginManager()->callEvent($ev = new PlayerConnectEvent($this, $this->isFirstTimeLogin));
+	public function handleLoginPacket(PlayerLoginPacket $packet) {
+		$this->isFirstTimeLogin = $packet->isFirstTime;
+		$this->server->getPluginManager()->callEvent($ev = new PlayerConnectEvent($this, $this->isFirstTimeLogin));
+		$loginPacket = $this->synapse->getPacket($packet->cachedLoginPacket);
+		if ($loginPacket === null) {
+			$this->close($this->getLeaveMessage(), 'Invalid login packet');
+			return;
+		}
 
-        if ($pk->cachedLoginPacket === null) {
-            $this->close($this->getLeaveMessage(), 'Invalid login packet');
-            return;
-        }
-
-
-        $this->uuid = $this->overrideUUID;
-        $this->rawUUID = $this->uuid->toBinary();
-        $this->randomClientId = $this->clientID;
-        $this->lastPacketTime = microtime(true);
-    }
-
+		$this->handleDataPacket($loginPacket);
+		$this->uuid = $this->overrideUUID;
+		$this->rawUUID = $this->uuid->toBinary();
+	}
 
 	public function handleText(TextPacket $packet) : bool {
 		foreach ($this->synapse->getClientData() as $hash => $data) {

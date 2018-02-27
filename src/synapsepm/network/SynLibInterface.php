@@ -9,17 +9,14 @@ use synapsepm\network\protocol\spp\RedirectPacket;
 use synapsepm\Synapse;
 
 
-class SynLibInterface implements  SourceInterface {
+class SynLibInterface implements SourceInterface {
+	private $synapseInterface;
+	private $synapse;
 
-
-    public function start()
+	public function start()
     {
         // TODO: Implement start() method.
     }
-
-
-    private $synapseInterface;
-	private $synapse;
 
 	public function __construct(Synapse $synapse, SynapseInterface $interface) {
 		$this->synapse = $synapse;
@@ -44,19 +41,19 @@ class SynLibInterface implements  SourceInterface {
 	}
 
 	public function putPacket(Player $player, DataPacket $packet, bool $needACK = false, bool $immediate = true) {
-		if ($player->isClosed()) {
-    $pk = new RedirectPacket();
-    $pk->uuid = $player->getUniqueId();
-    $pk->direct = $immediate;
-    if (!$packet->isEncoded) {
-        $packet->encode();
-    }
-    $pk->mcpeBuffer = $packet->buffer;
-    $this->synapseInterface->putPacket($pk);
-}
-return null;
-}
+		if (!$player->isClosed()) {
+			$pk = new RedirectPacket();
+			$pk->uuid = $player->getUniqueId();
+			$pk->direct = $immediate;
+			if (!$packet->isEncoded) {
+				$packet->encode();
+			}
+			$pk->mcpeBuffer = $packet->buffer;
+			$this->synapseInterface->putPacket($pk);
+		}
+		return null;
+	}
 
-public function shutdown() {
-}
+	public function shutdown() {
+	}
 }

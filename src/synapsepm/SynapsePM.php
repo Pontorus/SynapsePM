@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
-
 namespace synapsepm;
 
+use pocketmine\network\mcpe\RakLibInterface;
 use pocketmine\plugin\PluginBase;
+use pocketmine\scheduler\TaskHandler;
+use synapsepm\Synapse;
 
 
 class SynapsePM extends PluginBase {
@@ -30,9 +32,6 @@ class SynapsePM extends PluginBase {
 				$this->addSynapse(new Synapse($this, $synapseConfig));
 			}
 		}
-
-
-
 
 		$this->useLoadingScreen = (bool)$this->getConfig()->get('loadingScreen', true);
 	}

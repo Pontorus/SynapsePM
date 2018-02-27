@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-
 namespace synapsepm\network;
 
 use synapsepm\network\protocol\spp\BroadcastPacket;
@@ -65,7 +64,7 @@ class SynapseInterface {
 		$this->connected = $this->client->isConnected();
 		if ($this->client->isNeedAuth()) {
 			$this->synapse->connect();
-			$this->client->setNeedAuth(true);
+			$this->client->setNeedAuth(false);
 		}
 	}
 

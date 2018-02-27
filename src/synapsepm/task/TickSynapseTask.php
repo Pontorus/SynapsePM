@@ -7,7 +7,7 @@ use synapsepm\Synapse;
 use synapsepm\SynapsePM;
 
 
-class TickSynapseTask extends PluginTask  {
+class TickSynapseTask extends PluginTask {
 	/** @var Synapse */
 	private $synapse;
 
